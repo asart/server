@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ task.title|striptags }} / Задачи
+{% endblock %}
+
+
+{% block body %}
+    <h1>{{ task.title }}</h1>
+    <p class="lead">{{ task.description|raw }}</p>
+
+    <form id="form" action="check.php" method="post">
+        <div class="form-group">
+            <label for="editor">Ваше решение</label>
+            <div>
+                <kbd>&lt;?php</kbd>
+<textarea class="form-control" rows="7" id="editor" name="editor">
+{{ task.template }}
+</textarea>
+                <kbd>?&gt;</kbd>
+            </div>
+        </div>
+        <p id="result"></p>
+        <button type="submit" class="btn btn-success">Отправить на проверку</button>
+    </form>
+{% endblock %}
