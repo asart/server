@@ -26,13 +26,26 @@
     <div class="form-group">
         {{ form_label(form.template, 'Начало задачи') }}
         {{ form_errors(form.template) }}
-        {{ form_widget(form.template) }}
+        <div>
+            <kbd>&lt;?php</kbd>
+            {{ form_widget(form.template) }}
+            <kbd>?&gt;</kbd>
+        </div>
     </div>
 
     <div class="form-group">
         {{ form_label(form.test, 'Тесты') }}
         {{ form_errors(form.test) }}
-        {{ form_widget(form.test) }}
+        <div>
+            <kbd>&lt;?php</kbd><br/>
+            <kbd>declare(strict_types=1);</kbd><br/><br/>
+            <kbd>use PHPUnit\Framework\TestCase;</kbd><br/><br/>
+            <kbd>class TaskTest extends TestCase</kbd><br/>
+            <kbd>{</kbd><br/>
+            {{ form_widget(form.test) }}
+            <kbd>}</kbd>
+        </div>
+
     </div>
 
     {{ form_end(form) }}

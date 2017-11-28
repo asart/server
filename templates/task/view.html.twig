@@ -9,18 +9,17 @@
     <h1>{{ task.title }}</h1>
     <p class="lead">{{ task.description|raw }}</p>
 
-    <form id="form" action="check.php" method="post">
+    {{ form_start(form) }}
+
+    {{ form_errors(form) }}
         <div class="form-group">
-            <label for="editor">Ваше решение</label>
+            {{ form_label(form.solve, 'Ваше решение') }}
             <div>
                 <kbd>&lt;?php</kbd>
-<textarea class="form-control" rows="7" id="editor" name="editor">
-{{ task.template }}
-</textarea>
+                {{ form_widget(form.solve) }}
                 <kbd>?&gt;</kbd>
             </div>
         </div>
         <p id="result"></p>
-        <button type="submit" class="btn btn-success">Отправить на проверку</button>
-    </form>
+    {{ form_end(form) }}
 {% endblock %}
