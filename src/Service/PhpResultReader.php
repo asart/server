@@ -17,8 +17,8 @@ class PhpResultReader implements ArrayAccess
         $this->output = array_values(array_filter($this->output, function ($line) { return !empty($line); }));
 
         if (preg_match("/\bOK\b/", end($data))) {
-            $this->status = Solve::SOLVED;
-        } else $this->status = Solve::UNSOLVED;
+            $this->status = Solve::STATUS_SOLVED;
+        } else $this->status = Solve::STATUS_UNSOLVED;
 
         return $this;
     }

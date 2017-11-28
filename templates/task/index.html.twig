@@ -5,12 +5,11 @@
 {% endblock %}
 
 {% block body %}
-    {#<div class="jumbotron">#}
-        {#<h1 class="display-3">Jumbotron heading</h1>#}
-        {#<p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus#}
-            {#commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>#}
-        {#<p><a class="btn btn-lg btn-success" href="#" role="button">Sign up today</a></p>#}
-    {#</div>#}
+    <div class="jumbotron">
+        <h1 class="display-3">Работай головой</h1>
+        <p class="lead">Решай задачи, прокачивай свои навыки, зарабытывай очки опыта и обменивай их на полезный стаф!</p>
+        <p><a class="btn btn-lg btn-success" href="#" role="button">Регистрируйся сегодня!</a></p>
+    </div>
 
     <div class="row marketing">
 
@@ -23,6 +22,8 @@
                     </a>
                 </h4>
                 <p>{{ task.description|striptags }}</p>
+                <span class="label label-success" data-toggle="tooltip" data-placement="top" title="Успешных решений">{{ task.percents }}%</span>
+                <span class="label label-primary" data-toggle="tooltip" data-placement="top" title="Уровень сложности">Легко</span>
             {% endfor %}
         </div>
     </div>

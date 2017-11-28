@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Solve;
 use App\Entity\Task;
-use App\Form\TaskSolveType;
+use App\Form\SolveType;
 use App\Form\TaskType;
 use App\Service\SolveMaker;
 use App\Service\TaskMaker;
@@ -64,7 +64,10 @@ class TaskController extends Controller
      */
     public function viewAction(Task $task)
     {
-        $form = $this->createForm(TaskSolveType::class, ['solve' => $task->getTemplate()], [
+        $solve = new Solve();
+        $solve->setCode($task->getTemplate());
+
+        $form = $this->createForm(SolveType::class, $solve, [
             'action' => $this->generateUrl('task_solve', ['id' => $task->getId()]),
             'method' => 'POST',
         ]);
@@ -106,7 +109,9 @@ class TaskController extends Controller
      */
     public function solveAction(Task $task, Request $request)
     {
-        $form = $this->createForm(TaskSolveType::class);
+        $solve = new Solve();
+        
+        $form = $this->createForm(SolveType::class, $solve);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -117,7 +122,7 @@ class TaskController extends Controller
             ]);
         }
         return $this->json([
-            'status' => Solve::UNSOLVED,
+            'status' => Solve::STATUS_UNSOLVED,
             'output' => ['FAILURES!']
         ]);
     }

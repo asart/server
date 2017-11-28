@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -12,10 +13,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Task
 {
     const NUM_ITEMS = 10;
-    
+
     /**
      * @var int
-     * 
+     *
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -24,7 +25,7 @@ class Task
 
     /**
      * @var string
-     * 
+     *
      * Название задачи
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank()
@@ -33,7 +34,7 @@ class Task
 
     /**
      * @var string
-     * 
+     *
      * Описание задачи
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
@@ -42,7 +43,7 @@ class Task
 
     /**
      * @var string
-     * 
+     *
      * Заготовка для решения задачи
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
@@ -51,7 +52,7 @@ class Task
 
     /**
      * @var string
-     * 
+     *
      * Тесты
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
@@ -67,9 +68,16 @@ class Task
     private $createdAt;
 
 
+    /**
+     * @ORM\OneToMany(targetEntity="Solve", mappedBy="task")
+     */
+    private $solves;
+
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
+        $this->solves = new ArrayCollection();
     }
 
     /**
@@ -158,5 +166,28 @@ class Task
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSolves()
+    {
+        return $this->solves;
+    }
+
+    //
+    /**
+     * @return float
+     */
+    public function getPercents()
+    {
+        $arr = $this->getSolves()->toArray();
+        $solved = count(array_filter($arr, function ($solve) {
+            /** @var $solve Solve */
+            return $solve->getStatus() == Solve::STATUS_SOLVED;
+        }));
+        
+        return round($solved / count($arr) * 100, 2);
     }
 }

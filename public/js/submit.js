@@ -1,5 +1,7 @@
-$(document).ready(function () {
-    $(document).on("click", "#task_solve_save", function(e){
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+    
+    $(document).on("click", "#solve_add", function(e){
         e.preventDefault();
         $.ajax({
             data: $(this).closest("form").serialize(),
