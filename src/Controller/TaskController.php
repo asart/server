@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Solve;
 use App\Entity\Task;
 use App\Form\TaskSolveType;
 use App\Form\TaskType;
+use App\Service\SolveMaker;
+use App\Service\TaskMaker;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -22,6 +25,23 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class TaskController extends Controller
 {
+    private $taskMaker;
+    private $solveMaker;
+
+    /**
+     * TaskController constructor.
+     * @param TaskMaker $taskMaker
+     * @param SolveMaker $solveMaker
+     */
+    public function __construct(
+        TaskMaker $taskMaker,
+        SolveMaker $solveMaker
+    )
+    {
+        $this->taskMaker = $taskMaker;
+        $this->solveMaker = $solveMaker;
+    }
+
     /**
      * @Route("/", defaults={"page": "1", "_format"="html"}, name="task_index")
      * @Method("GET")
@@ -66,28 +86,10 @@ class TaskController extends Controller
         $task = new Task();
 
         $form = $this->createForm(TaskType::class, $task);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $task = $form->getData();
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($task);
-            $em->flush();
-
-            $rootTestPath = $this->container->getParameter('kernel.root_dir') . '/../var/tests';
-            if (!is_dir($rootTestPath))
-                mkdir($rootTestPath, 0777, true);
-
-            $testPath = $rootTestPath . '/' . $task->getId();
-            if (!is_dir($testPath))
-                mkdir($testPath, 0777, true);
-
-            $_test = "<?php\ndeclare(strict_types=1);\nuse PHPUnit\\Framework\\TestCase;\nclass TaskTest extends TestCase\n{\n\t%s\n}";
-
-            file_put_contents($testPath . '/TaskTest.php', sprintf($_test, $task->getTest()), LOCK_EX);
-
+            $task = $this->taskMaker->add($form->getData());
             return $this->redirectToRoute('task_view', ['id' => $task->getId()]);
         }
 
@@ -108,18 +110,15 @@ class TaskController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $rootTestPath = $this->container->getParameter('kernel.root_dir') . '/../var/tests';
-            $testPath = $rootTestPath . '/' . $task->getId();
-            
-            if (!is_dir($testPath))
-                mkdir($testPath, 0777, true);
-
-            $_solve = "<?php\n%s\n?>";
-            file_put_contents($testPath . '/TaskSolve.php', sprintf($_solve, $data['solve']), LOCK_EX);
-            $result = shell_exec('phpunit --bootstrap ' . $testPath . '/TaskSolve.php ' . $testPath . '/TaskTest');
-            return $this->render('task/solve.html.twig', ['result' => $result]);
+            $result = $this->solveMaker->add($task, $form->getData());
+            return $this->json([
+                'status' => $result['status'],
+                'output' => $result['output']
+            ]);
         }
-        return $this->render('task/solve.html.twig', ['result' => 'FAILURES!']);
+        return $this->json([
+            'status' => Solve::UNSOLVED,
+            'output' => ['FAILURES!']
+        ]);
     }
 }
