@@ -256,5 +256,23 @@
             "version": "1.17",
             "ref": "66070ea553247b0cd5275e21d0fe5399a25f40be"
         }
+    },
+    "symfony/templating": {
+        "version": "v3.3.13"
+    },
+    "symfony/phpunit-bridge": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "76589c0e33dbcc40151109d134a14f141ff2eeba"
+        }
+    },
+    "symfony/dom-crawler": {
+        "version": "v3.3.13"
+    },
+    "symfony/browser-kit": {
+        "version": "v3.3.13"
     }
 }

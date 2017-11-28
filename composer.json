@@ -4,6 +4,7 @@
     "require": {
         "php": "^7.0.8",
         "javiereguiluz/easyadmin-bundle": "^1.17",
+        "symfony/browser-kit": "^3.3",
         "symfony/console": "^3.3",
         "symfony/framework-bundle": "^3.3",
         "symfony/templating": "^3.3",
@@ -11,8 +12,9 @@
         "symfony/yaml": "^3.3"
     },
     "require-dev": {
+        "symfony/dotenv": "^3.3",
         "symfony/flex": "^1.0",
-        "symfony/dotenv": "^3.3"
+        "symfony/phpunit-bridge": "^3.3"
     },
     "config": {
         "preferred-install": {
